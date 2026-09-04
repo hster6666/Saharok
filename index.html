@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сахарок — щоденник та калькулятор для діабетиків</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #e8f5e9;
+            --accent: #f57c00;
+            --text: #333333;
+            --text-light: #666666;
+            --bg: #ffffff;
+            --bg-alt: #f9f9f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+        }
+
+        .hero-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-wrapper { grid-template-columns: 1fr; text-align: center; }
+            .nav-links { display: none; }
+        }
+
+        .hero-tag {
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover { background-color: #1b5e20; }
+        .btn-sub { font-size: 12px; color: var(--text-light); margin-top: 8px; block-size: auto; }
+
+        /* Stats Counter */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 28px; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 14px; color: var(--text-light); }
+
+        /* Widget Preview */
+        .widget-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eeeeee;
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .timer-box {
+            background: #fff3e0;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .timer-val { font-size: 24px; font-weight: bold; color: var(--accent); }
+
+        /* Features Section */
+        .features { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 32px; margin-bottom: 50px; }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--bg-alt);
+            padding: 30px;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card h3 { margin-bottom: 15px; font-size: 20px; color: var(--primary); }
+        .feature-log { background: white; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 14px; }
+
+        /* Installation Steps */
+        .steps { padding: 80px 0; background: var(--bg-alt); }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .step-num {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-light);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .step-card h3 { margin-bottom: 10px; font-size: 18px; margin-top: 15px; }
+        .step-card p { font-size: 14px; color: var(--text-light); }
+
+        /* Premium Section */
+        .premium { padding: 80px 0; text-align: center; }
+        .premium p.subtitle { color: var(--text-light); max-width: 600px; margin: -30px auto 40px auto; }
+        
+        .premium-box {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 2px solid var(--primary-light);
+        }
+
+        .premium-features {
+            text-align: left;
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .premium-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .premium-features li::before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Tabs Pricing */
+        .tab-buttons {
+            display: inline-flex;
+            background: var(--bg-alt);
+            padding: 5px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            border: none;
+            background: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .price-display { font-size: 36px; font-weight: bold; margin-bottom: 20px; }
+        .price-saving { color: var(--accent); font-size: 14px; font-weight: bold; margin-top: -15px; margin-bottom: 15px; display: none; }
+
+        /* Footer & Disclaimer */
+        .disclaimer {
+            background: #fff9c4;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin: 40px 0;
+            border-left: 4px solid #fbc02d;
+        }
+
+        footer {
+            background: #222222;
+            color: #ffffff;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        footer a { color: #fff; text-decoration: underline; }
+        footer p { opacity: 0.7; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Навігація -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Сахарок</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Можливості</a></li>
+                    <li><a href="#steps">Як завантажити</a></li>
+                    <li><a href="#premium">Premium</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Головний екран (Hero) -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-wrapper">
+                <div>
+                    <span class="hero-tag">Для тих, хто рахує ХО кожен день</span>
+                    <h1>Один щоденник замість трьох блокнотів</h1>
+                    <p>Калькулятор хлібних одиниць, щоденник харчування та інсуліну, тренування — в одному додатку для Android. Без реєстрації, без зайвих запитань.</p>
+                    
+                    <a href="#" class="btn">Скачати APK, 12 МБ</a>
+                    <div class="btn-sub">Android 8.0 і новіше</div>
+
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-num">3</div>
+                            <div class="stat-label">інструменти в одному</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-num">0 грн</div>
